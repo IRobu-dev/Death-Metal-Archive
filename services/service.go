@@ -47,13 +47,13 @@ func SearchBandWithAlbums(context *gin.Context) {
 	for _, band := range bandsList {
 		if band.Name == keyWord {
 			ResultSearch.Bands = append(ResultSearch.Bands, band)
-			ResultSearch.Albums = append(ResultSearch.Albums, GetAlbumFromBands(band.Id)...)
+			ResultSearch.Albums = append(ResultSearch.Albums, getAlbumFromBands(band.Id)...)
 		}
 	}
 	context.JSON(http.StatusAccepted, ResultSearch)
 }
 
-func GetAlbumFromBands(bandId int) []models.Album {
+func getAlbumFromBands(bandId int) []models.Album {
 	var result []models.Album
 	for _, album := range albumsList {
 		if album.Band == bandId {
@@ -62,4 +62,27 @@ func GetAlbumFromBands(bandId int) []models.Album {
 	}
 	return result
 }
-func GetBandsFromAlbums() {}
+func GetBandsFromAlbums(context *gin.Context) {
+	keyWord := context.Param("key")
+	var ResultSearch models.SearchResult
+
+	for _, album := range albumsList {
+		if album.Title == keyWord {
+			ResultSearch.Albums = append(ResultSearch.Albums, album)
+			getBandFromAlbum(album.Band)
+			ResultSearch.Bands = append(ResultSearch.Bands, getBandFromAlbum(album.Band)...)
+		}
+	}
+	context.JSON(http.StatusAccepted, ResultSearch)
+}
+
+func getBandFromAlbum(bandId int) []models.Band {
+	var result []models.Band
+	for _, band := range bandsList {
+		if band.Id == bandId {
+			result = append(result, band)
+			break
+		}
+	}
+	return result
+}

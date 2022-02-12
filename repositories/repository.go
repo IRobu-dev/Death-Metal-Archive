@@ -8,8 +8,6 @@ import (
 	"strconv"
 )
 
-// CARICO PRIMA TUTTI I CSV IN UN QUARTO METODO. CARICO TUTTI I FILE ALL INIZIO DELL'APP IN MODO CHE NON FACCIA RITARDI.
-
 func LoadBands() []models.Band {
 	csvFile, err := os.Open("src/bands.csv")
 	if err != nil {
